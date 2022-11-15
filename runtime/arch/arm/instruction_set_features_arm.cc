@@ -68,6 +68,7 @@ ArmFeaturesUniquePtr ArmInstructionSetFeatures::FromVariant(
       "kryo",
       "kryo385",
       "kryo485",
+      "kryo585",
       "kryo785",
   };
   bool has_armv8a = FindVariantInArray(arm_variants_with_armv8a,
