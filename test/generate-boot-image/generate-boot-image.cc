@@ -82,7 +82,7 @@ int GenerateBootImage(const std::string& dir, const std::string& compiler_filter
   args.push_back("--compiler-filter=" + compiler_filter);
   args.push_back(StringPrintf("--profile-file=%s/etc/boot-image.prof", GetArtRoot().c_str()));
   args.push_back("--avoid-storing-invocation");
-  args.push_back("--generate-debug-info");
+ // args.push_back("--generate-debug-info");
   args.push_back("--generate-build-id");
   args.push_back("--image-format=lz4hc");
   args.push_back("--strip");
