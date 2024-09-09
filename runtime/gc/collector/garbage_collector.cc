@@ -366,6 +366,7 @@ void GarbageCollector::SweepArray(accounting::ObjectStack* allocations,
   if (large_object_space != nullptr) {
     accounting::LargeObjectBitmap* large_live_objects = large_object_space->GetLiveBitmap();
     accounting::LargeObjectBitmap* large_mark_objects = large_object_space->GetMarkBitmap();
+    std::vector<mirror::Object*> freed_los_objects;
     if (swap_bitmaps) {
       std::swap(large_live_objects, large_mark_objects);
     }
@@ -377,8 +378,12 @@ void GarbageCollector::SweepArray(accounting::ObjectStack* allocations,
       }
       if (!large_mark_objects->Test(obj)) {
         ++freed_los.objects;
-        freed_los.bytes += large_object_space->Free(self, obj);
+        freed_los_objects.push_back(obj);
       }
+    }
+    if (freed_los.objects > 0) {
+      freed_los.bytes +=
+          large_object_space->FreeList(self, freed_los.objects, &freed_los_objects[0]);
     }
   }
   {
