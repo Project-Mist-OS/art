@@ -443,6 +443,13 @@ const Iteration* GarbageCollector::GetCurrentIteration() const {
 }
 
 bool GarbageCollector::ShouldEagerlyReleaseMemoryToOS() const {
+  // We have seen old kernels and custom kernel features misbehave in the
+  // presence of too much usage of MADV_FREE. So always release memory eagerly
+  // while we investigate.
+  static constexpr bool kEnableLazyRelease = false;
+  if (!kEnableLazyRelease) {
+    return true;
+  }
   Runtime* runtime = Runtime::Current();
   // Zygote isn't a memory heavy process, we should always instantly release memory to the OS.
   if (runtime->IsZygote()) {
