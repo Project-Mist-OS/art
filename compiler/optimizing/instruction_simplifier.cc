@@ -709,6 +709,9 @@ bool InstructionSimplifierVisitor::TryReplaceWithRotateRegisterSubPattern(HBinar
 
 void InstructionSimplifierVisitor::VisitNullCheck(HNullCheck* null_check) {
   HInstruction* obj = null_check->InputAt(0);
+  // Note we don't do `CanEnsureNotNullAt` here. If we do that, we may get rid of a NullCheck but
+  // what we should do instead is coalesce them. This is what GVN does, and so InstructionSimplifier
+  // doesn't do this.
   if (!obj->CanBeNull()) {
     null_check->ReplaceWith(obj);
     null_check->GetBlock()->RemoveInstruction(null_check);
