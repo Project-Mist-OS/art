@@ -765,6 +765,9 @@ void ArtMethod::SetIntrinsic(uint32_t intrinsic) {
   } else {
     SetAccessFlags(new_value);
   }
+
+  // Intrinsics are considered hot from the first call.
+  SetHotCounter();
 }
 
 void ArtMethod::SetNotIntrinsic() {
