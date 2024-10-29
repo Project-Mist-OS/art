@@ -690,8 +690,11 @@ extern "C" jit::OsrData* NterpHotMethod(ArtMethod* method, uint16_t* dex_pc_ptr,
   ScopedAssertNoThreadSuspension sants("In nterp");
   Runtime* runtime = Runtime::Current();
   if (method->IsMemorySharedMethod()) {
-    DCHECK_EQ(Thread::Current()->GetSharedMethodHotness(), 0u);
-    Thread::Current()->ResetSharedMethodHotness();
+    if (!method->IsIntrinsic()) {
+      // Intrinsics are special and will be considered hot from the first call.
+      DCHECK_EQ(Thread::Current()->GetSharedMethodHotness(), 0u);
+      Thread::Current()->ResetSharedMethodHotness();
+    }
   } else {
     // Move the counter to the initial threshold in case we have to re-JIT it.
     method->ResetCounter(runtime->GetJITOptions()->GetWarmupThreshold());
