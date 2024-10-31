@@ -2871,7 +2871,7 @@ void ImageWriter::CreateHeader(size_t oat_index, size_t component_count) {
       target_ptr_size_);
 }
 
-ArtMethod* ImageWriter::GetImageMethodAddress(ArtMethod* method) {
+ArtMethod* ImageWriter::GetImageMethodAddress(ArtMethod* method) const {
   NativeObjectRelocation relocation = GetNativeRelocation(method);
   const ImageInfo& image_info = GetImageInfo(relocation.oat_index);
   CHECK_GE(relocation.offset, image_info.image_end_) << "ArtMethods should be after Objects";
@@ -3297,7 +3297,7 @@ class ImageWriter::FixupClassVisitor final : public FixupVisitor {
   }
 };
 
-ImageWriter::NativeObjectRelocation ImageWriter::GetNativeRelocation(void* obj) {
+ImageWriter::NativeObjectRelocation ImageWriter::GetNativeRelocation(void* obj) const {
   DCHECK(obj != nullptr);
   DCHECK(!IsInBootImage(obj));
   auto it = native_object_relocations_.find(obj);

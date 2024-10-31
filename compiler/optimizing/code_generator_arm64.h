@@ -832,6 +832,13 @@ class CodeGeneratorARM64 : public CodeGenerator {
   vixl::aarch64::Label* NewBootImageMethodPatch(MethodReference target_method,
                                                 vixl::aarch64::Label* adrp_label = nullptr);
 
+  // Add a new app image method patch for an instruction and return the label
+  // to be bound before the instruction. The instruction will be either the
+  // ADRP (pass `adrp_label = null`) or the LDR (pass `adrp_label` pointing
+  // to the associated ADRP patch label).
+  vixl::aarch64::Label* NewAppImageMethodPatch(MethodReference target_method,
+                                               vixl::aarch64::Label* adrp_label = nullptr);
+
   // Add a new .bss entry method patch for an instruction and return
   // the label to be bound before the instruction. The instruction will be
   // either the ADRP (pass `adrp_label = null`) or the LDR (pass `adrp_label`
@@ -1186,6 +1193,8 @@ class CodeGeneratorARM64 : public CodeGenerator {
 
   // PC-relative method patch info for kBootImageLinkTimePcRelative.
   ArenaDeque<PcRelativePatchInfo> boot_image_method_patches_;
+  // PC-relative method patch info for kAppImageRelRo.
+  ArenaDeque<PcRelativePatchInfo> app_image_method_patches_;
   // PC-relative method patch info for kBssEntry.
   ArenaDeque<PcRelativePatchInfo> method_bss_entry_patches_;
   // PC-relative type patch info for kBootImageLinkTimePcRelative.

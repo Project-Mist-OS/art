@@ -457,6 +457,12 @@ class OatWriter {
   // Map for recording references to GcRoot<mirror::MethodType> entries in .bss.
   SafeMap<const DexFile*, BitVector> bss_method_type_entry_references_;
 
+  // Map for allocating app image ArtMethod entries in .data.img.rel.ro. Indexed by MethodReference
+  // for the target method in the dex file with the "method reference value comparator" for
+  // deduplication. The value is the target offset for patching, starting at
+  // `data_img_rel_ro_start_`.
+  SafeMap<MethodReference, size_t, MethodReferenceValueComparator> app_image_rel_ro_method_entries_;
+
   // Map for allocating ArtMethod entries in .bss. Indexed by MethodReference for the target
   // method in the dex file with the "method reference value comparator" for deduplication.
   // The value is the target offset for patching, starting at `bss_start_ + bss_methods_offset_`.

@@ -4727,6 +4727,10 @@ enum class MethodLoadKind {
   // Used for app->boot calls with relocatable image.
   kBootImageRelRo,
 
+  // Load from an app image entry in the .data.img.rel.ro using a PC-relative load.
+  // Used for app image methods referenced by apps in AOT-compiled code.
+  kAppImageRelRo,
+
   // Load from an entry in the .bss section using a PC-relative load.
   // Used for methods outside boot image referenced by AOT-compiled app and boot image code.
   kBssEntry,
@@ -4759,6 +4763,7 @@ enum class CodePtrLocation {
 static inline bool IsPcRelativeMethodLoadKind(MethodLoadKind load_kind) {
   return load_kind == MethodLoadKind::kBootImageLinkTimePcRelative ||
          load_kind == MethodLoadKind::kBootImageRelRo ||
+         load_kind == MethodLoadKind::kAppImageRelRo ||
          load_kind == MethodLoadKind::kBssEntry;
 }
 
