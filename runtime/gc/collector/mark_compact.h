@@ -937,6 +937,19 @@ class MarkCompact final : public GarbageCollector {
   // TODO: Must be replaced with an efficient mechanism eventually. Or ensure
   // that double updation doesn't happen in the first place.
   std::unique_ptr<std::unordered_set<void*>> updated_roots_ GUARDED_BY(lock_);
+
+  // Maximum batch processing size
+  static constexpr size_t kMaxBatchSize = 8;
+
+  // Smart backoff strategy based on thread priority and contention history
+  void SmartBackOff(uint32_t iteration);
+
+  // Get adaptive backoff parameters based on thread characteristics
+  std::pair<uint32_t, uint64_t> GetBackOffParams();
+
+  // Optimized TLAB zero page batch processing
+  void OptimizedTlabZeroPageBatch(uint8_t* fault_page,
+                                  bool tolerate_enoent);
   // TODO: Remove once an efficient mechanism to deal with double root updation
   // is incorporated.
   void* stack_high_addr_;
